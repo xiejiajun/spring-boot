@@ -141,6 +141,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	@Override
 	public final void refresh() throws BeansException, IllegalStateException {
 		try {
+			// TODO AbstractApplicationContext.refresh -> onRefresh
 			super.refresh();
 		}
 		catch (RuntimeException ex) {
@@ -154,8 +155,10 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 
 	@Override
 	protected void onRefresh() {
+		// TODO AbstractApplicationContext.refresh -> onRefresh
 		super.onRefresh();
 		try {
+			// TODO 启动Http服务器
 			createWebServer();
 		}
 		catch (Throwable ex) {
@@ -176,8 +179,10 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		ServletContext servletContext = getServletContext();
 		if (webServer == null && servletContext == null) {
 			StartupStep createWebServer = this.getApplicationStartup().start("spring.boot.webserver.create");
+			// TODO 从IOC容器中获取ServletWebServerFactory实现类的实例
 			ServletWebServerFactory factory = getWebServerFactory();
 			createWebServer.tag("factory", factory.getClass().toString());
+			// TODO TomcatServletWebServerFactory.getWebServer
 			this.webServer = factory.getWebServer(getSelfInitializer());
 			createWebServer.end();
 			getBeanFactory().registerSingleton("webServerGracefulShutdown",

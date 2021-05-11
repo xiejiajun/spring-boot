@@ -42,7 +42,9 @@ import org.springframework.data.repository.Repository;
  * auto-configuration} and {@link ComponentScan component scanning}. This is a convenience
  * annotation that is equivalent to declaring {@code @Configuration},
  * {@code @EnableAutoConfiguration} and {@code @ComponentScan}.
- *
+ * TODO SpringBootApplication只是一个基于Spring注解组合机制的组合注解，使用该注解标注的Bean会自动被Spring的组合注解解析方法解析到
+ *  SpringBootApplication之上注解的SpringBootConfiguration、EnableAutoConfiguration、ComponentScan等注解以及他们的上层注解，
+ *  最终的IOC容器配置也是通过获取组合在这些高级注解之上的Spring Framework注解对象来完成的
  * @author Phillip Webb
  * @author Stephane Nicoll
  * @author Andy Wilkinson

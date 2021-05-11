@@ -195,6 +195,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 			tomcat.getService().addConnector(additionalConnector);
 		}
 		prepareContext(tomcat.getHost(), initializers);
+		// TODO 获取TomcatServer
 		return getTomcatWebServer(tomcat);
 	}
 
@@ -442,6 +443,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	 * @return a new {@link TomcatWebServer} instance
 	 */
 	protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
+		// TODO 创建并初始化TomcatServer
 		return new TomcatWebServer(tomcat, getPort() >= 0, getShutdown());
 	}
 

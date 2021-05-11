@@ -165,6 +165,7 @@ class BeanDefinitionLoader {
 			((GroovyBeanDefinitionReader) this.groovyReader).beans(loader.getBeans());
 		}
 		if (isEligible(source)) {
+			// TODO 大概率走这里，因为SpringBoot大多数情况都使用注解配置Bean, 注册Bean到IOC容器，用户定义的主类也在这里注册
 			this.annotatedReader.register(source);
 		}
 	}

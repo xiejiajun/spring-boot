@@ -101,6 +101,7 @@ public class TomcatWebServer implements WebServer {
 		this.tomcat = tomcat;
 		this.autoStart = autoStart;
 		this.gracefulShutdown = (shutdown == Shutdown.GRACEFUL) ? new GracefulShutdown(tomcat) : null;
+		// TODO 初始化并启动TomcatServer
 		initialize();
 	}
 
@@ -119,6 +120,7 @@ public class TomcatWebServer implements WebServer {
 					}
 				});
 
+				// TODO 启动Tomcat
 				// Start the server to trigger initialization listeners
 				this.tomcat.start();
 

@@ -278,9 +278,11 @@ public class SpringApplication {
 		this.resourceLoader = resourceLoader;
 		Assert.notNull(primarySources, "PrimarySources must not be null");
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+		// TODO 判断应用类型
 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		// TODO 设置主类
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
@@ -318,11 +320,16 @@ public class SpringApplication {
 			ConfigurableEnvironment environment = prepareEnvironment(listeners, applicationArguments);
 			configureIgnoreBeanInfo(environment);
 			Banner printedBanner = printBanner(environment);
+			// TODO 根据ApplicationType创建对应的上下文，sevlet类型得到的是ServletWebServerApplicationContext
+			//  的子类AnnotationConfigServletWebServerApplicationContext
 			context = createApplicationContext();
 			context.setApplicationStartup(this.applicationStartup);
 			exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
 					new Class<?>[] { ConfigurableApplicationContext.class }, context);
+			// TODO 主类会在这里注册到IOC容器
 			prepareContext(context, environment, listeners, applicationArguments, printedBanner);
+			// TODO IOC容器中的Bean初始化，底层调用了Spring的AbstractApplicationContext.refresh
+			//  会打印springboot的启动标志，并触发启动Tomcat等Web容器，直到server.port端口启动
 			refreshContext(context);
 			afterRefresh(context, applicationArguments);
 			stopWatch.stop();
@@ -330,6 +337,13 @@ public class SpringApplication {
 				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), stopWatch);
 			}
 			listeners.started(context);
+			// TODO 调用ApplicationRunner/CommandLineRunner实现类的run方法，没有Web容器的命令行程序一般会选择实现
+			//  这两个接口之一的run方法作为逻辑入口，然后在这里被触发。
+			//  当然，也可以通过@PostConstruct注解方法指定初始化方法，然后在依赖注入getBean的时候触发执行
+			//  还可以通过实现InitializingBean接口或者通过注解@Bean(initMethod = xxx )指定等方式，
+			//    InitializingBean接口的afterPropertiesSet方法或者用户指定的initMethod会在
+			//    AbstractAutowireCapableBeanFactory.initializeBean触发，该方法会由
+			//    BeanConfigurerSupport.configureBean、SpringBeanContainer.createBean等方法调用
 			callRunners(context, applicationArguments);
 		}
 		catch (Throwable ex) {
@@ -402,6 +416,7 @@ public class SpringApplication {
 		// Load the sources
 		Set<Object> sources = getAllSources();
 		Assert.notEmpty(sources, "Sources must not be empty");
+		// TODO 加载主类
 		load(context, sources.toArray(new Object[0]));
 		listeners.contextLoaded(context);
 	}
@@ -586,6 +601,7 @@ public class SpringApplication {
 	 * @see #setApplicationContextFactory(ApplicationContextFactory)
 	 */
 	protected ConfigurableApplicationContext createApplicationContext() {
+		// TODO  ApplicationContextFactory.DEFAULT.create: 根据ApplicationType创建对应的上下文
 		return this.applicationContextFactory.create(this.webApplicationType);
 	}
 
@@ -679,6 +695,7 @@ public class SpringApplication {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loading source " + StringUtils.arrayToCommaDelimitedString(sources));
 		}
+		// TODO 创建用于将用户定义的主类加载到Spring IOC容器的BeanDefinitionLoader
 		BeanDefinitionLoader loader = createBeanDefinitionLoader(getBeanDefinitionRegistry(context), sources);
 		if (this.beanNameGenerator != null) {
 			loader.setBeanNameGenerator(this.beanNameGenerator);
@@ -689,6 +706,7 @@ public class SpringApplication {
 		if (this.environment != null) {
 			loader.setEnvironment(this.environment);
 		}
+		// TODO 加载资源到IOC容器
 		loader.load();
 	}
 
