@@ -6,6 +6,8 @@ description = "Core starter, including auto-configuration support, logging and Y
 
 dependencies {
 	api(project(":spring-boot-project:spring-boot"))
+	// TODO spring-boot-starters依赖了autoconfigure模块，所以使用autoconfigure模块的spring.factories文件，
+	//  这个文件里面的EnableAutoConfiguration key配置了所有内置starter的自动配置类
 	api(project(":spring-boot-project:spring-boot-autoconfigure"))
 	api(project(":spring-boot-project:spring-boot-starters:spring-boot-starter-logging"))
 	api("jakarta.annotation:jakarta.annotation-api")
