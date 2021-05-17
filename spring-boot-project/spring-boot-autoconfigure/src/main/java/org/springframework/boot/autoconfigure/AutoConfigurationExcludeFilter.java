@@ -59,6 +59,7 @@ public class AutoConfigurationExcludeFilter implements TypeFilter, BeanClassLoad
 
 	protected List<String> getAutoConfigurations() {
 		if (this.autoConfigurations == null) {
+			// TODO 获取SpringBoot 第三方 Starter的SPI文件
 			this.autoConfigurations = SpringFactoriesLoader.loadFactoryNames(EnableAutoConfiguration.class,
 					this.beanClassLoader);
 		}
