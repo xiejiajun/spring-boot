@@ -40,6 +40,7 @@ class WebServerStartStopLifecycle implements SmartLifecycle {
 
 	@Override
 	public void start() {
+		// TODO 启动WebServer
 		this.webServer.start();
 		this.running = true;
 		this.applicationContext
@@ -48,6 +49,7 @@ class WebServerStartStopLifecycle implements SmartLifecycle {
 
 	@Override
 	public void stop() {
+		// TODO 停止webServer
 		this.webServer.stop();
 	}
 

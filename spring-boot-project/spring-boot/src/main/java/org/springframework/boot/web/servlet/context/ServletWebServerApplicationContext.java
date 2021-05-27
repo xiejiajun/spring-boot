@@ -185,6 +185,8 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 			// TODO TomcatServletWebServerFactory.getWebServer
 			this.webServer = factory.getWebServer(getSelfInitializer());
 			createWebServer.end();
+			// TODO 注册在Spring 容器初始化过程中自动调用webServer.start/stop方法启动/停止webServer的Spring SmartLifecycle
+			//  扩展点实现类WebServerStartStopLifecycle和webServer优雅停机实现类WebServerGracefulShutdownLifecycle
 			getBeanFactory().registerSingleton("webServerGracefulShutdown",
 					new WebServerGracefulShutdownLifecycle(this.webServer));
 			getBeanFactory().registerSingleton("webServerStartStop",
@@ -192,6 +194,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		}
 		else if (servletContext != null) {
 			try {
+				// TODO 这里的onStartup实现是通过方法引用指定的ServletWebServerApplicationContext.selfInitialize
 				getSelfInitializer().onStartup(servletContext);
 			}
 			catch (ServletException ex) {
